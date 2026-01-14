@@ -1,118 +1,397 @@
 <!DOCTYPE html>
-<!-- Created with iSpring --><!-- 736 684 --><!--version 11.9.0.4 --><!--type html --><!--mainFolder ./ -->
-<html style=background-color:#dcdee0;>
+<html lang="vi">
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/><meta name="format-detection" content="telephone=no"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="msapplication-tap-highlight" content="no"/><title>BÀI GIẢNG TÍNH ĐƠN ĐIỆU CỦA HÀM SỐ</title><link rel="apple-touch-icon-precomposed" href="data/apple-touch-icon.png"/><link rel="shortcut icon" type="image/ico" href="data/favicon.ico"/><style>body {background-color:#dcdee0;}#spr0_a33bd7 {display:none;}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathpro - Hệ Thống Học & Thi</title>
     
-    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
     <style>
-		#playerView {
-			position:absolute;
-			-webkit-tap-highlight-color:rgba(0,0,0,0);
-			-webkit-user-select:none;
-			-moz-user-select:none;
-			-webkit-touch-callout:none;
-			-webkit-user-drag:none;
-		}
-		#playerView * {
-			position:absolute;
-		}
-		#preloader {
-			width: 50px;
-			height: 50px;
-			position: absolute;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			right: 0;
-			margin: auto;
-			border-radius: 10px;
-			background-color: rgba(0, 0, 0, 0.5);
-		}
+        :root { --p: #2563eb; --bg: #f3f4f6; --txt: #1f2937; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--txt); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* 1. AUTH */
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .auth-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 360px; text-align: center; border: 1px solid #ddd; }
+        .inp { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn { padding: 10px 20px; background: var(--p); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; } .btn:active { transform: scale(0.95); }
+        .btn-outline { background: white; color: #333; border: 1px solid #ccc; width: 100%; margin-top: 10px; }
+        .tab-grp { display: flex; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .tab { flex: 1; padding: 10px; cursor: pointer; background: none; border: none; font-weight: bold; color: #666; }
+        .tab.active { color: var(--p); border-bottom: 3px solid var(--p); }
+        .f-view { display: none; } .f-view.active { display: block; }
 
-		#preloader::after {
-			content: '';
-			position: absolute;
-			background: url(data:image/png;base64,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UmVhZHlxyWU8AAADcmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMwNjcgNzkuMTU3NzQ3LCAyMDE1LzAzLzMwLTIzOjQwOjQyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOmFjOGVjNDFhLTZkYWItODQ0Ni04YzkzLWU1Mjk3N2YwMmE4NSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFRThCNzU3NDYzNjcxMUU1QTZDRUE5NTVGOUJGQ0E3MCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpFRThCNzU3MzYzNjcxMUU1QTZDRUE5NTVGOUJGQ0E3MCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNSAoV2luZG93cykiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0OWFlZmI1OC00ZWFmLWQ3NDgtYTI0ZS0zNmNhNGQ2M2QwNTYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0MwQkFBM0M2MjAxMTFFNUI4QjBERTk4MjY5MjQwQjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6MGSVVAAAE3klEQVR42uycW4hWVRiG15Q4eYzGQySSQlriEQ9BF2mE4iSdESRRIb0RD+mNmHgICjqQEGUe6sqgCy1i0iRinAzELrooQhHLGQURUTzMiM7omCLj+/F/czX/t/890z6s9e/3hZcZ1l6z19r7mXXca62arq4uR/mjh/gKCIQiEAKhCIRAKAIhEIpACIQiEIpACIQiEAKhCIRAKAIhEMoX9Yu62NbWxjcUobq6OpaQQpcQz/QwPBOeDU+Fx8Oj4UfhoRrnJnwDvgC3wCfgY/Bf8P0QHrImahmQB1VWLfwGvAieqy+/LxJIR+Dv4QPwf75WWb4CGQavg9fo70mqFd4F79DfCSRCA+HN8Hp4cMppdcBfwB/Bt9mo99Sr8Cl4SwYwnKYhaf2jaXMconoE/hL+CR6TQ/pPato7NS+FbtSfgH+Gp8eMfwv+HT6qpakZvqzVT/d//ePw0/BEeI72ygbFvP/f8MvwpSK2IfLSGuGxFeJ1aby98CG4s5fpDNAqaTlcL89cIf45jddcpDZknI4PKsFo0NKzQLusnX1Iq1P/doHe60CF+GM1b+OK0obIYO5XeGREnLPwfHghfDzBtOVeb+q9z0bEG6njltHVDqQ2RuP9HTwDbkoxH02axv4YjX1tNQP5LKIBl7ZiK/yWToGkLUljsaZpNaTTNc9VCeR1eHUEjHfgD3OoQiXNVRFQVmveqwrIEHh3xPXNOp2Rl77WPFiSvA+tJiCb4FHGNanHP/FggCp52Gdck7y/Wy0Dw2Hatx9s9KZmZNRmxC3JMjh8qsy1Du0St4Y+DomaKFzlEQxRu+apnOQZ1oVeZfWPeMCGlLu2/6dL3BDRwPcPGYiMjocbvaoPnL963+h1DddnChbIMiP8cMIj8KQln34be/lM3gOREW69cW2v81/fGOH1aY7e0wTyrNGYyxT6wQCAHNS8lmvcZ4UIZL4RLt8z7gQA5I7mtZyeCxHIS0b4UReOrLw+EyIQqxScDAiIldcJIQLZYTTmvwUEpMUIHxMikB/gta40PXIF/lwHVrcCAnLVCH8srQR9X7mYt2RUbq1yrOFia390N9SReugaYoR3EEg+GmGEtxNIPhpvhJ8nkHw02Qj/l0Dy0Rwj/DSBZC9ZeD3buPYHgWSv11z5RdrSw/qTQLLX20Z4o0toSxyBxJdsKrVmq79NM2ECKa/3XPltC9fgXwgkW81zpVX35fSVS3HahEB6SqZK9hjXujeJOgLJTrLG19qos1OrLALJSLL+eLFx7SL8cRaZIJCSVrrSfnVL8qHtJoFkoy3ablibQeWz849ZZaZfgUHIfg/Z97EkIs5xLR2OQNLv2u5x0Ttt5UShV1wfj91glRVP01xp8UVTBRiyuOFFheJYQpKVzNrKwQErXPyDA2SF+5k8MhsykCnwPdfzaA3ZYy6nREyCX4Cfd/EPs+nV0RoEUlqWsx1eCie9Bkc2nW5wOa87Dg3Ipy75bWXntSd1yIcHDK1RT3KzTIcOBif6AqOo3d42HX/I0tZW3zIXWgnp68chmfaQjZxyoKac0bXNRxghlpCN2m1dpj/btXEfpD0uqYaua89Luq3dx8TKN3AeE1vt4mLrAohACIQiEAKhCIRAKAIhEIpACq7IqROKJYRA+AoIhCIQAqEIhEAoAiEQikCKrQcCDABHPgH2w7NQdAAAAABJRU5ErkJggg==);
-			background-size: cover;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			right: 0;
-			animation: preloader_spin 1s infinite linear;
-			-webkit-animation: preloader_spin 1s infinite linear;
-		}
+        /* 2. HEADER & NAV */
+        header { background: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); z-index: 100; flex-shrink: 0; }
+        .nav-bar { display: flex; justify-content: center; gap: 10px; padding: 10px; background: #fff; border-bottom: 1px solid #eee; flex-shrink: 0; }
+        .nav-btn { padding: 8px 16px; border: none; background: #f0f0f0; border-radius: 20px; cursor: pointer; font-weight: 600; color: #666; }
+        .nav-btn.active { background: var(--p); color: white; }
 
-		@keyframes preloader_spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
-		@-webkit-keyframes preloader_spin { 0% {-webkit-transform: rotate(0deg);} 100% {-webkit-transform: rotate(360deg);}}
+        /* 3. MAIN LAYOUT */
+        #main-app { display: none; flex-direction: column; height: 100%; }
+        .container { flex: 1; overflow-y: auto; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .section { display: none; height: 100%; } 
+        .section.active { display: block; }
+
+        /* 4. GIAO DIỆN BÀI GIẢNG E-LEARNING */
+        .lecture-layout { display: flex; gap: 20px; height: 100%; flex-wrap: wrap; }
+        .lecture-list { flex: 1; min-width: 250px; background: white; border-radius: 8px; border: 1px solid #e5e7eb; overflow-y: auto; max-height: calc(100vh - 180px); }
+        .lecture-item { padding: 12px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center; transition: 0.2s; }
+        .lecture-item:hover { background: #f9fafb; color: var(--p); }
+        .lecture-item.active { background: #eff6ff; color: var(--p); font-weight: bold; border-left: 4px solid var(--p); }
+        .lecture-icon { margin-right: 10px; font-size: 1.1rem; }
+        .lecture-viewer { flex: 3; min-width: 300px; background: #000; border-radius: 8px; overflow: hidden; height: 100%; min-height: 400px; position: relative; }
+        .lecture-iframe { width: 100%; height: 100%; border: none; }
+        .lecture-placeholder { display: flex; justify-content: center; align-items: center; height: 100%; color: white; flex-direction: column; }
+
+        /* 5. GIAO DIỆN THI (QUIZ) */
+        .q-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 300px; display: flex; flex-direction: column; justify-content: center; font-family: 'Times New Roman', serif; font-size: 1.15rem; line-height: 1.5; }
+        .part-label { background: #dbeafe; color: #1e40af; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; font-family: 'Segoe UI', sans-serif; }
+        .q-img { display: block; max-width: 100%; height: auto; max-height: 250px; margin: 15px auto; border: 1px solid #eee; border-radius: 8px; }
+        
+        /* Options P1 */
+        .opt-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .opt-item { padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: 0.2s; font-family: 'Segoe UI', sans-serif; font-size: 1rem; }
+        .opt-item:hover { background: #f9fafb; border-color: var(--p); }
+        .opt-item.selected { background: #eff6ff; border-color: var(--p); color: var(--p); font-weight: bold; }
+        
+        /* Options P2 */
+        .tf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .tf-table td { padding: 10px; border-bottom: 1px solid #eee; }
+        .tf-btn { padding: 5px 15px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; margin-left: 5px; font-family: 'Segoe UI', sans-serif; font-size: 0.9rem; }
+        .tf-btn.selected { background: var(--p); color: white; border-color: var(--p); }
+
+        /* Options P3 */
+        .short-inp { width: 100%; padding: 15px; font-size: 1.1rem; border: 2px solid #e5e7eb; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        .short-inp:focus { border-color: var(--p); outline: none; }
+
+        /* FOOTER NAV */
+        .footer-nav { background: white; padding: 15px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        #grid-panel { position: absolute; bottom: 70px; left: 0; right: 0; background: white; padding: 20px; border-top: 1px solid #ccc; display: none; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); max-height: 60vh; overflow-y: auto; z-index: 50; }
+        .grid-sec-title { font-weight: bold; margin: 10px 0 5px 0; color: #666; font-size: 0.9rem; border-bottom: 1px solid #eee; padding-bottom: 5px; font-family: 'Segoe UI', sans-serif; }
+        .grid-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .q-btn { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; font-size: 13px; display: flex; justify-content: center; align-items: center; }
+        .q-btn.done { background: #22c55e; color: white; border-color: #22c55e; }
+        .q-btn.current { border: 2px solid var(--p); font-weight: bold; transform: scale(1.1); }
+
+        /* CHATBOT */
+        .chat-btn { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--p); border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 900; }
+        .chat-box { position: fixed; bottom: 150px; right: 20px; width: 320px; height: 400px; background: white; border-radius: 12px; box-shadow: 0 5px 30px rgba(0,0,0,0.15); display: none; flex-direction: column; z-index: 900; border: 1px solid #eee; }
     </style>
 </head>
 <body>
-	<div id="preloader"></div>
-	<script src="data/browsersupport.js?7EE96155"></script>
-	<script src="data/player.js?7EE96155"></script>
-    <div id="content"></div>
-    <div id="spr0_a33bd7"><audio id="snd0_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd1_a33bd7" preload="metadata"><source src="data/sound2.mp3" type="audio/mpeg"/></audio><audio id="snd2_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd3_a33bd7" preload="metadata"><source src="data/sound3.mp3" type="audio/mpeg"/></audio><audio id="snd4_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd5_a33bd7" preload="metadata"><source src="data/sound4.mp3" type="audio/mpeg"/></audio><audio id="snd6_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd7_a33bd7" preload="metadata"><source src="data/sound5.mp3" type="audio/mpeg"/></audio><audio id="snd8_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd9_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd10_a33bd7" preload="metadata"><source src="data/sound6.mp3" type="audio/mpeg"/></audio><audio id="snd11_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd12_a33bd7" preload="metadata"><source src="data/sound7.mp3" type="audio/mpeg"/></audio><audio id="snd13_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd14_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd15_a33bd7" preload="metadata"><source src="data/sound8.mp3" type="audio/mpeg"/></audio><audio id="snd16_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd17_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd18_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd19_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd20_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio><audio id="snd21_a33bd7" preload="metadata"><source src="data/sound1.mp3" type="audio/mpeg"/></audio></div>
+
+    <div id="auth-overlay">
+        <div class="auth-card">
+            <h2 style="color:var(--p);margin-top:0">Mathpro</h2>
+            <div class="tab-grp">
+                <button class="tab active" onclick="switchTab('login')">Đăng Nhập</button>
+                <button class="tab" onclick="switchTab('reg')">Đăng Ký</button>
+            </div>
+            <div id="v-login" class="f-view active">
+                <input id="l-email" class="inp" placeholder="Email" value="hocsinh@mathpro.edu.vn">
+                <input id="l-pass" type="password" class="inp" placeholder="Mật khẩu" value="123456">
+                <button class="btn" style="width:100%" onclick="doLogin()">Vào Lớp</button>
+            </div>
+            <div id="v-reg" class="f-view">
+                <input id="r-name" class="inp" placeholder="Họ tên">
+                <input id="r-email" class="inp" placeholder="Email">
+                <input id="r-pass" type="password" class="inp" placeholder="Mật khẩu">
+                <button class="btn" style="width:100%;background:#16a34a" onclick="doRegister()">Tạo Tài Khoản</button>
+            </div>
+            <button class="btn btn-outline" onclick="doGoogle()">Google Login</button>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <header>
+            <strong style="font-size:1.3rem;color:var(--p)">Mathpro</strong>
+            <div><span id="u-name" style="font-weight:bold;margin-right:10px">Học sinh</span><button class="btn" style="background:#fee2e2;color:red;padding:5px 10px" onclick="doLogout()">Thoát</button></div>
+        </header>
+
+        <div class="nav-bar">
+            <button class="nav-btn active" onclick="nav('lecture')">Bài Giảng</button>
+            <button class="nav-btn" onclick="nav('docs')">Tài Liệu</button>
+            <button class="nav-btn" onclick="nav('quiz')">Vào Thi</button>
+        </div>
+
+        <div class="container">
+            
+            <div id="sec-lecture" class="section active">
+                <div class="card" style="height:100%; box-sizing:border-box; display:flex; flex-direction:column;">
+                    <h3 style="margin-top:0; border-bottom:1px solid #eee; padding-bottom:10px;">📺 Kho Bài Giảng</h3>
+                    <div class="lecture-layout">
+                        <div class="lecture-list" id="lecture-list"></div>
+                        <div class="lecture-viewer">
+                            <iframe id="main-frame" class="lecture-iframe" src="" allowfullscreen></iframe>
+                            <div id="viewer-placeholder" class="lecture-placeholder">
+                                <div style="font-size:3rem;">▶️</div>
+                                <p>Chọn bài giảng để bắt đầu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-docs" class="section">
+                <div class="card">
+                    <h3>📚 Kho Tài Liệu</h3>
+                    <div style="padding:15px;background:#eff6ff;border-left:4px solid var(--p); margin-bottom:10px;">
+                        <b>📄 Đề cương Ôn tập Chương 1.pdf</b><br>
+                        <a href="#" style="color:var(--p);text-decoration:none">⬇️ Tải xuống</a>
+                    </div>
+                    <div style="padding:15px;background:#fdf2f8;border-left:4px solid #db2777;">
+                        <b>📄 Bài tập tự luyện (Có đáp án).pdf</b><br>
+                        <a href="#" style="color:#db2777;text-decoration:none">⬇️ Tải xuống</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-quiz" class="section" style="flex-direction:column">
+                <div id="quiz-area" style="flex:1; display:flex; flex-direction:column; justify-content:center;"></div>
+            </div>
+        </div>
+
+        <div id="footer-nav" class="footer-nav" style="display:none">
+            <button class="btn" style="background:#e5e7eb;color:#333" onclick="moveQ(-1)">⬅️ Trước</button>
+            <button class="btn" style="background:white;color:var(--p);border:1px solid var(--p)" onclick="toggleGrid()">🔢 Danh sách câu</button>
+            <button class="btn" onclick="moveQ(1)">Sau ➡️</button>
+            <button class="btn" style="background:#dc2626;margin-left:10px" onclick="submitExam()">NỘP BÀI</button>
+        </div>
+        
+        <div id="grid-panel">
+            <div class="grid-sec-title">PHẦN I (12 Câu)</div> <div class="grid-row" id="grid-p1"></div>
+            <div class="grid-sec-title">PHẦN II (2 Câu)</div> <div class="grid-row" id="grid-p2"></div>
+            <div class="grid-sec-title">PHẦN III (4 Câu)</div> <div class="grid-row" id="grid-p3"></div>
+        </div>
+    </div>
+
+    <div class="chat-btn" onclick="toggleChat()">💬</div>
+    <div class="chat-box" id="chat-box">
+        <div style="padding:10px;background:var(--p);color:white;font-weight:bold">Trợ lý AI</div>
+        <div style="flex:1;padding:10px;overflow-y:auto;background:#f9f9f9" id="chat-msgs"><div class="msg bot">Chào em!</div></div>
+        <div style="padding:10px;border-top:1px solid #eee;display:flex"><input id="chat-inp" class="inp" style="margin:0;flex:1"><button class="btn" style="margin-left:5px" onclick="sendChat()">Gửi</button></div>
+    </div>
+
     <script>
-		document.addEventListener("DOMContentLoaded", () => (function(startup){
-			function start(savedPresentationState)
-			{
-				var presInfo = "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";
-				PresentationPlayer.start(presInfo, "content", "playerView", onPlayerInit, savedPresentationState);
-				function onPlayerInit(player)
-				{
-					(function(player){
-	(function(player)
-{
-	function findConnector(win)
-	{
-		var retries = 0;
-		while (!win.ispringPresentationConnector && win.parent && win.parent != win)
-		{
-			++retries;
-			if (retries > 7)
-			{
-				return null;
-			}
+        const CFG={apiKey:"AIzaSyC1RdQm6whSY6afs5ueEXYaBl6E31oIcS0",authDomain:"mathpro-db.firebaseapp.com",projectId:"mathpro-db"};
+        const GEMINI="AIzaSyBKWlAMRP32ubiF3WoLQR57z3RamEhlJy0";
+        const SHEET="https://script.google.com/macros/s/AKfycbz4rTGYlQhHLZTUMyVlY5Tlcrv81k0UfhEMy_B-62GYfEJTM4s7JCq-ANEm3ofn0QdONA/exec";
+        let auth, user, currentQ=0, answers={};
 
-			win = win.parent;
-		}
-		return win.ispringPresentationConnector;
-	}
+        // --- DỮ LIỆU BÀI GIẢNG ---
+        const LECTURES = [
+            { id: 1, title: "Bài 1: Nguyên hàm cơ bản (Video)", type: "video", url: "https://www.youtube.com/embed/JzHbWqV2q2E" },
+            { id: 2, title: "Bài 2: Phương pháp đổi biến số (Slide)", type: "slide", url: "https://docs.google.com/presentation/d/e/2PACX-1vQ.../embed" },
+            { id: 3, title: "Bài 1: Tính đơn điệu của hàm số (E-learning)", type: "elearning", url: "baigiang-bai1/index.html" }
+        ];
 
-	function getConnector()
-	{
-		var api = findConnector(window);
-		if (!api && window.opener && (typeof(window.opener) != "undefined"))
-		{
-			api = findConnector(window.opener);
-		}
-		return api;
-	}
+        // --- DỮ LIỆU CÂU HỎI (CHUẨN 100%) ---
+        const QUESTIONS = [
+            // P1 (12 câu)
+            {type:1, id:1, q:`Cho tứ diện ABCD, gọi I, J lần lượt là trung điểm của AB và CD. Đẳng thức nào sau đây sai? <img src="img/c1.png" class="q-img" onerror="this.style.display='none'">`, opts:["A. \\(\\vec{IJ}=\\frac{1}{2}(\\vec{AC}+\\vec{BD})\\)", "B. \\(\\vec{IJ}=\\frac{1}{2}(\\vec{DC}+\\vec{AD}+\\vec{BD})\\)", "C. \\(\\vec{IJ}=\\frac{1}{2}(\\vec{AD}+\\vec{BC})\\)", "D. \\(\\vec{IJ}=\\frac{1}{2}(\\vec{AC}+\\vec{BD})\\)"], a:"B"},
+            {type:1, id:2, q:`Hàm số có đồ thị như hình vẽ sau đồng biến trên khoảng nào dưới đây? <img src="img/c2.png" class="q-img" onerror="this.style.display='none'">`, opts:["A. (-3; 1)", "B. (-1; 1)", "C. (1; +∞)", "D. (-1; +∞)"], a:"B"},
+            {type:1, id:3, q:"Cho hàm số \\(y=\\frac{x-1}{x+1}\\). Khẳng định nào sau đây đúng?", opts:["A. Đồng biến trên R\\{-1}", "B. Nghịch biến trên R\\{-1}", "C. Đồng biến (-∞;-1)U(-1;+∞)", "D. Đồng biến từng khoảng"], a:"D"},
+            {type:1, id:4, q:"Hàm số \\(y=\\ln(4-x^2)\\) đồng biến trên khoảng?", opts:["A. (-2; 2)", "B. (-2; 0)", "C. (0; 2)", "D. (-∞; 2)"], a:"B"},
+            {type:1, id:5, q:`Cho hàm số y=f(x) có bảng biến thiên. Mệnh đề nào sai? <img src="img/c5.png" class="q-img" onerror="this.style.display='none'">`, opts:["A. Nghịch biến (-∞; 2)", "B. Đồng biến (2; +∞)", "C. Đồng biến (2; 5)", "D. Nghịch biến (0; 2)"], a:"A"},
+            {type:1, id:6, q:`Cho hình hộp ABCD.A'B'C'D'. Tính tổng \\(\\vec{AB}+\\vec{AD}+\\vec{A'C'}\\) <img src="img/c6.png" class="q-img" onerror="this.style.display='none'">`, opts:["A. \\(2\\vec{AA'}\\)", "B. \\(2\\vec{AC}\\)", "C. \\(2\\vec{C'A'}\\)", "D. \\(\\vec{0}\\)"], a:"B"},
+            {type:1, id:7, q:"Cho hình lập phương ABCD.A'B'C'D'. Khẳng định nào sai?", opts:["A. (AB,A'D')=90", "B. (AB,A'C')=45", "C. (AC,B'D')=90", "D. (A'A,CB')=45"], a:"D"},
+            {type:1, id:8, q:"Cho hàm số y=f(x) liên tục trên R có đạo hàm \\(f'(x)=x(1-x)^2(x-2)^3\\). Nghịch biến trên?", opts:["A. (0; 2)", "B. (-∞; 0)", "C. (1; +∞)", "D. (-1; 1)"], a:"A"},
+            {type:1, id:9, q:"Tìm khoảng nghịch biến của hàm số biết \\(f'(x)=3x(x-1)^2(x+2)^3\\).", opts:["A. (-2;0) và (1;+∞)", "B. (-∞;-2) và (0;1)", "C. (-∞;-2) và (0;+∞)", "D. (-2; 0)"], a:"D"},
+            {type:1, id:10, q:"Giả sử lượng hàng bán ra x theo giá p là \\(x=\\frac{250-p}{0.01p}\\). Khẳng định đúng?", opts:["A. Tăng khi giá tăng", "B. Giảm khi giá giảm", "C. Ko đổi", "D. Giảm khi giá tăng"], a:"D"},
+            {type:1, id:11, q:`Vận tốc chất điểm tăng khi t thuộc khoảng nào? <img src="img/c11.png" class="q-img" onerror="this.style.display='none'">`, opts:["A. (-3; +∞)", "B. (0; 2)", "C. (2; +∞)", "D. (0; +∞)"], a:"C"},
+            {type:1, id:12, q:`Hàm số đồng biến trên khoảng nào? <img src="img/c12.png" class="q-img" onerror="this.style.display='none'">`, opts:["A. (0; 1)", "B. (-∞; 4)", "C. (-1; 0)", "D. (1; +∞)"], a:"A"},
+            // P2 (2 câu)
+            {type:2, id:13, q:"Trong không gian, cho hai vectơ a và b cùng có độ dài bằng 1, góc 45 độ.", subs:["a) \\(\\vec{a}.\\vec{b}=\\frac{\\sqrt{2}}{2}\\).", "b) \\(|\\vec{a}+\\vec{b}|=2+\\sqrt{2}\\).", "c) \\((\\vec{a}+3\\vec{b}).(\\vec{a}-2\\vec{b})=-5+\\frac{\\sqrt{2}}{2}\\).", "d) \\(|\\vec{a}-\\sqrt{2}\\vec{b}|=0\\)."], ans:["S","S","Đ","Đ"]},
+            {type:2, id:14, q:"Xét hàm số \\(y=\\frac{1}{3}x^3+(m+1)x^2+(m^2+2m)x-3\\) m là tham số.", subs:["a) Hàm số nghịch biến trên \\(\\mathbb{R}\\) với mọi giá trị của m.", "b) Hàm số nghịch biến trên khoảng (-1; 1) khi và chỉ khi \\(m \\ge -1\\).", "c) Không tồn tại giá trị m để hàm số đồng biến trên \\(\\mathbb{R}\\).", "d) Tập xác định của hàm số là \\(D=\\mathbb{R}\\setminus\\{3\\}\\)."], ans:["S","S","Đ","S"]},
+            // P3 (4 câu)
+            {type:3, id:15, q:`Hằng ngày mực nước của một con kênh lên xuống theo thủy triều. Độ sâu h (m) của mực nước trong kênh tại thời điểm \\(t(h)(0\\le t\\le24)\\) trong ngày được xác định bởi công thức \\(h=2\\cos(\\frac{\\pi t}{12}+\\frac{\\pi}{3})+5\\). Gọi (a;b) là khoảng thời gian trong ngày mà độ sâu của mực nước trong kênh tăng dần. Tính giá trị của \\(a+b\\).`, a:"28"},
+            {type:3, id:16, q:`Người ta vận chuyển một thùng hàng có dạng hình hộp chữ nhật bằng cách móc 4 dây cáp vào 4 góc trên của thùng hàng và đầu còn lại móc vào cần cẩu như hình vẽ. <img src="img/p3c2.png" class="q-img" onerror="this.style.display='none'"> Biết rằng các đoạn dây cáp có độ dài bằng nhau và góc tạo bởi hai đoạn dây cáp đối diện nhau là \\(60^{\\circ}\\). Chiếc cần cẩu kéo thùng hàng lên theo phương thẳng đứng. Biết rằng \\(F_{1}, F_{2}, F_{3}, F_{4}\\) chịu được tối đa lực căng là 5 000 N. Hỏi cần cẩu nâng được thùng hàng có khối lượng (đơn vị kg) tối đa là bao nhiêu (làm tròn đến hàng đơn vị)? Lấy \\(g=10~m/s^{2}\\).`, a:"1732"},
+            {type:3, id:17, q:`Cho hàm số \\(f(x)=x^{2}-2x\\). Đặt \\(g(x)=f(f(x))+1\\). Giả sử hàm số \\(y=g(x)\\) đồng biến trên khoảng (a;b) với \\(a\\in\\mathbb{R}, b\\in\\mathbb{R}\\). Tính \\(a+b\\sqrt{2}\\).`, a:"1"},
+            {type:3, id:18, q:`Thể tích \\(V(cm^{3})\\) của 1kg nước tại nhiệt độ \\(T(0^{\\circ}C\\le T\\le30^{\\circ}C)\\) được tính bởi công thức \\(V(T)=999,87-0,06426T+0,0058043T^{2}-0,0000679T^{3}.\\) Thể tích nước \\(V(T)(0^{\\circ}C\\le T\\le30^{\\circ}C)\\) giảm trong khoảng nhiệt độ \\((a^{\\circ};b^{\\circ});\\) b làm tròn đến hàng đơn vị. Tổng \\(a+b\\) bằng bao nhiêu?`, a:"4"}
+        ];
 
-	try
-	{
-		var connector = getConnector();
-		if (connector)
-		{
-			connector.register(player);
-		}
-	}
-	catch (e) {}
-})(player);
+        // LOGIC AUTH
+        function switchTab(t){
+            document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+            document.querySelectorAll('.f-view').forEach(f=>f.classList.remove('active'));
+            if(t==='login'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('v-login').classList.add('active')}
+            else{document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('v-reg').classList.add('active')}
+        }
+        function doLogin(){auth.signInWithEmailAndPassword(document.getElementById('l-email').value,document.getElementById('l-pass').value).catch(e=>alert(e.message))}
+        function doRegister(){const n=document.getElementById('r-name').value;auth.createUserWithEmailAndPassword(document.getElementById('r-email').value,document.getElementById('r-pass').value).then(c=>c.user.updateProfile({displayName:n}).then(()=>location.reload())).catch(e=>alert(e.message))}
+        function doGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>alert(e.message))}
+        function doLogout(){auth.signOut().then(()=>location.reload())}
+        
+        // LOGIC NAV & LECTURE
+        function nav(id){
+            document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); // Reset
+            
+            const quizSec = document.getElementById('sec-quiz');
+            if(id === 'quiz') {
+                quizSec.classList.add('active');
+                quizSec.style.display = 'flex'; // Force flex for slide layout
+                document.getElementById('footer-nav').style.display='flex';
+                renderQ();
+            } else {
+                quizSec.classList.remove('active');
+                quizSec.style.display = 'none'; // Force hide
+                document.getElementById('sec-'+id).classList.add('active');
+                document.getElementById('footer-nav').style.display='none';
+            }
+            // Active btn
+            const btnMap = {'lecture':0, 'docs':1, 'quiz':2};
+            document.querySelectorAll('.nav-btn')[btnMap[id]].classList.add('active');
+        }
 
-})(player);
+        function initLectures() {
+            const list = document.getElementById('lecture-list');
+            if(!list) return;
+            let html = '';
+            LECTURES.forEach((lec, index) => {
+                html += `<div class="lecture-item" onclick="playLecture(${index})" id="lec-btn-${index}">
+                    <span class="lecture-icon">📺</span> <span>${lec.title}</span>
+                </div>`;
+            });
+            list.innerHTML = html;
+        }
 
-					var preloader = document.getElementById("preloader");
-					preloader.parentNode.removeChild(preloader);
-				}
-			}
+        function playLecture(index) {
+            document.querySelectorAll('.lecture-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`lec-btn-${index}`).classList.add('active');
+            const lec = LECTURES[index];
+            document.getElementById('viewer-placeholder').style.display = 'none';
+            document.getElementById('main-frame').style.display = 'block';
+            document.getElementById('main-frame').src = lec.url;
+        }
 
-			if (startup)
-				startup(start);
-			else
-				start();
-		})());
+        // LOGIC QUIZ
+        function renderQ(){
+            const q = QUESTIONS[currentQ];
+            let html = `<div class="q-card">
+                <div><span class="part-label">Phần ${q.type} - Câu ${q.id}</span></div>
+                <div class="q-content">${q.q}</div>`;
+            
+            if(q.type === 1) { // P1
+                html += `<div class="opt-list">`;
+                q.opts.forEach(opt => {
+                    const val = opt.charAt(0);
+                    const sel = answers[q.id] === val ? 'selected' : '';
+                    html += `<div class="opt-item ${sel}" onclick="saveAns(${q.id}, '${val}')">${opt}</div>`;
+                });
+                html += `</div>`;
+            } else if(q.type === 2) { // P2
+                html += `<table class="tf-table">`;
+                q.subs.forEach((sub, idx) => {
+                    const k = `${q.id}_${idx}`;
+                    const dSel = answers[k] === 'Đ' ? 'selected' : '';
+                    const sSel = answers[k] === 'S' ? 'selected' : '';
+                    html += `<tr><td>${sub}</td><td width="130">
+                        <span class="tf-btn ${dSel}" onclick="saveAns('${k}', 'Đ')">Đúng</span>
+                        <span class="tf-btn ${sSel}" onclick="saveAns('${k}', 'S')">Sai</span>
+                    </td></tr>`;
+                });
+                html += `</table>`;
+            } else { // P3
+                const val = answers[q.id] || '';
+                html += `<input class="short-inp" value="${val}" oninput="saveAns(${q.id}, this.value)" placeholder="Nhập số...">`;
+            }
+            html += `</div>`;
+            document.getElementById('quiz-area').innerHTML = html;
+            if(window.MathJax) MathJax.typesetPromise();
+            updateGrid();
+        }
+
+        function saveAns(key, val) {
+            answers[key] = val;
+            renderQ();
+        }
+
+        function moveQ(dir) {
+            const next = currentQ + dir;
+            if(next >= 0 && next < QUESTIONS.length) {
+                currentQ = next;
+                renderQ();
+            }
+        }
+
+        function toggleGrid() {
+            const p = document.getElementById('grid-panel');
+            if(p.style.display === 'block') { p.style.display = 'none'; return; }
+            
+            const p1 = QUESTIONS.filter(q=>q.type===1).map((q,i) => renderBtn(q, i)).join('');
+            const p2 = QUESTIONS.filter(q=>q.type===2).map((q,i) => renderBtn(q, i+12)).join(''); // offset 12
+            const p3 = QUESTIONS.filter(q=>q.type===3).map((q,i) => renderBtn(q, i+14)).join(''); // offset 14
+
+            document.getElementById('grid-p1').innerHTML = p1;
+            document.getElementById('grid-p2').innerHTML = p2;
+            document.getElementById('grid-p3').innerHTML = p3;
+            p.style.display = 'block';
+        }
+
+        function renderBtn(q, idx) {
+            let done = false;
+            if(q.type===1 && answers[q.id]) done=true;
+            if(q.type===3 && answers[q.id]) done=true;
+            if(q.type===2) { // P2: Làm ít nhất 1 ý là xanh
+                for(let k=0; k<4; k++) if(answers[`${q.id}_${k}`]) done=true;
+            }
+            const cls = done ? 'done' : '';
+            const cur = idx === currentQ ? 'current' : '';
+            return `<button class="q-btn ${cls} ${cur}" onclick="currentQ=${idx};renderQ();toggleGrid()">${q.id}</button>`;
+        }
+
+        function submitExam() {
+            let s1=0, s2=0, s3=0;
+            QUESTIONS.filter(q=>q.type===1).forEach(q=>{ if(answers[q.id]===q.a) s1+=0.25; });
+            QUESTIONS.filter(q=>q.type===2).forEach(q=>{
+                let c=0;
+                q.ans.forEach((ans, i)=>{ if(answers[`${q.id}_${i}`]===ans) c++; });
+                s2 += [0, 0.1, 0.25, 1.0, 1.5][c];
+            });
+            QUESTIONS.filter(q=>q.type===3).forEach(q=>{ if(answers[q.id]?.trim()===q.a) s3+=1.0; });
+            
+            const total = (s1+s2+s3).toFixed(2);
+            alert(`Nộp bài thành công!\nTổng điểm: ${total}\n(P1: ${s1}, P2: ${s2}, P3: ${s3})`);
+            const fd=new FormData(); fd.append("TenHocSinh",user.email); fd.append("Diem",total);
+            fetch(SHEET,{method:'POST',body:fd});
+        }
+
+        // CHAT
+        function toggleChat(){const b=document.getElementById('chat-box');b.style.display=b.style.display==='flex'?'none':'flex'}
+        async function sendChat(){
+            const i=document.getElementById('chat-inp'), t=i.value.trim(); if(!t)return;
+            const b=document.getElementById('chat-msgs'); b.innerHTML+=`<div class="msg user">${t}</div>`; i.value=''; b.scrollTop=b.scrollHeight;
+            try{
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:"Giải ngắn: "+t}]}]})});
+                const d = await r.json(); b.innerHTML+=`<div class="msg bot">${d.candidates[0].content.parts[0].text}</div>`;
+            }catch(e){b.innerHTML+=`<div class="msg bot">Lỗi AI</div>`}
+        }
+
+        // INIT
+        window.onload=()=>{
+            try{
+                firebase.initializeApp(CFG); auth=firebase.auth();
+                auth.onAuthStateChanged(u=>{
+                    if(u){
+                        user=u;
+                        document.getElementById('auth-overlay').style.display='none';
+                        document.getElementById('main-app').style.display='flex';
+                        document.getElementById('u-name').innerText=u.displayName||u.email;
+                        initLectures();
+                    } else {
+                        document.getElementById('auth-overlay').style.display='flex';
+                        document.getElementById('main-app').style.display='none';
+                    }
+                });
+            }catch(e){alert("Lỗi: "+e.message)}
+        };
     </script>
 </body>
 </html>
